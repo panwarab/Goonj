@@ -1,18 +1,17 @@
-package com.abhiroj.goonj;
+package com.abhiroj.goonj.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.HashMap;
+import com.abhiroj.goonj.R;
+import com.abhiroj.goonj.fragment.MainFragment;
 
-import static com.abhiroj.goonj.Constants.fragtag;
+import static com.abhiroj.goonj.data.Constants.fragtag;
+
 
 public class MainActivity extends AppCompatActivity {
 

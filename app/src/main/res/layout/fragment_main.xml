@@ -2,11 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.abhiroj.goonj.MainFragment">
+    tools:context="com.abhiroj.goonj.fragment.MainFragment">
 
-<android.support.v4.view.ViewPager
-    android:id="@+id/imageslider"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/slider_height"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/imageslider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/slider_height" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    </LinearLayout>
 
 </FrameLayout>

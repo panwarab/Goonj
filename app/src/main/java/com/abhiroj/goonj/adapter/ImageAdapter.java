@@ -1,11 +1,13 @@
-package com.abhiroj.goonj;
+package com.abhiroj.goonj.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import static com.abhiroj.goonj.Constants.IMAGE_COUNT;
+import com.abhiroj.goonj.fragment.ImagePagerFragment;
+
+import static com.abhiroj.goonj.data.Constants.IMAGE_COUNT;
 
 /**
  * Created by ruthless on 19/4/17.

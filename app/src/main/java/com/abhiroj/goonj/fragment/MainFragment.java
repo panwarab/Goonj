@@ -1,19 +1,27 @@
-package com.abhiroj.goonj;
+package com.abhiroj.goonj.fragment;
 
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 
-import static com.abhiroj.goonj.Constants.HANDLER_POST_DELAYED_TIME;
-import static com.abhiroj.goonj.Constants.IMAGE_COUNT;
-import static com.abhiroj.goonj.Utility.checkNotNull;
+import com.abhiroj.goonj.R;
+import com.abhiroj.goonj.adapter.CardAdapter;
+import com.abhiroj.goonj.adapter.ImageAdapter;
+import com.abhiroj.goonj.animator.DepthPageTransformer;
+
+import static com.abhiroj.goonj.data.Constants.HANDLER_POST_DELAYED_TIME;
+import static com.abhiroj.goonj.data.Constants.IMAGE_COUNT;
+import static com.abhiroj.goonj.data.Constants.SPAN_COUNT;
+import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 
 
 /**
@@ -27,19 +35,22 @@ public class MainFragment extends Fragment {
     private View rootView;
     private int currentImage=0;
     private Handler slide_handler=makeHandler();
+    private RecyclerView grid_view;
+
+
+
+    public MainFragment() {
+        // Required empty public constructor
+    }
 
     Runnable automatic_sliding=new Runnable() {
         @Override
         public void run() {
             Log.d(TAG,"Runnable Called");
-         imagepager.setCurrentItem((currentImage%IMAGE_COUNT)<4?currentImage++:setCurrentImage(0),true);
-         slide_handler.postDelayed(automatic_sliding,HANDLER_POST_DELAYED_TIME);
+            imagepager.setCurrentItem((currentImage%IMAGE_COUNT)<4?currentImage++:setCurrentImage(0),true);
+            slide_handler.postDelayed(automatic_sliding,HANDLER_POST_DELAYED_TIME);
         }
     };
-
-    public MainFragment() {
-        // Required empty public constructor
-    }
 
 
     @Override
@@ -48,6 +59,10 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView=inflater.inflate(R.layout.fragment_main, container, false);
         setupImageSlider();
+        grid_view=(RecyclerView) rootView.findViewById(R.id.grid_view);
+        grid_view.setHasFixedSize(true);
+        grid_view.setLayoutManager(new GridLayoutManager(getContext(),SPAN_COUNT));
+        grid_view.setAdapter(new CardAdapter(getContext()));
         return rootView;
     }
 

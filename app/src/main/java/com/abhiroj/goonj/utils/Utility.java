@@ -1,4 +1,4 @@
-package com.abhiroj.goonj;
+package com.abhiroj.goonj.utils;
 
 /**
  * Created by ruthless on 19/4/17.

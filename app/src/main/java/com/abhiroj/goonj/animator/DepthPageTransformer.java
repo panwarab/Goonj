@@ -1,4 +1,4 @@
-package com.abhiroj.goonj;
+package com.abhiroj.goonj.animator;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

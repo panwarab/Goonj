@@ -1,4 +1,4 @@
-package com.abhiroj.goonj;
+package com.abhiroj.goonj.fragment;
 
 
 import android.os.Bundle;
@@ -10,11 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.abhiroj.goonj.R;
 import com.squareup.picasso.Picasso;
 
-import static com.abhiroj.goonj.Constants.IMAGE_SLIDER_TAG;
-import static com.abhiroj.goonj.Constants.fragtag;
-import static com.abhiroj.goonj.Constants.image_placeholder;
+import static com.abhiroj.goonj.data.Constants.IMAGE_SLIDER_TAG;
+import static com.abhiroj.goonj.data.Constants.fragtag;
+import static com.abhiroj.goonj.data.Constants.image_placeholder;
 
 /**
  * Created by ruthless on 19/4/17.
