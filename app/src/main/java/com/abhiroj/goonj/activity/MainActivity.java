@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.abhiroj.goonj.R;
+import com.abhiroj.goonj.fragment.EventDetailListFragment;
 import com.abhiroj.goonj.fragment.EventsFragment;
 import com.abhiroj.goonj.fragment.MainFragment;
 import com.abhiroj.goonj.listener.OnCardTappedListener;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     private static final String TAG = MainActivity.class.getSimpleName();
     private MainFragment mainFragment;
     private EventsFragment eventFragment;
+    private EventDetailListFragment eventDetailListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             {
                 eventFragment=(EventsFragment) fragment;
                 fragmentManager.beginTransaction().replace(R.id.fragment_container,eventFragment,EventsFragment.TAG).commit();
+            }
+            else if(fragment instanceof EventDetailListFragment)
+            {
+                eventDetailListFragment=(EventDetailListFragment) fragment;
+                fragmentManager.beginTransaction().replace(R.id.fragment_container,eventDetailListFragment,EventDetailListFragment.TAG).commit();
             }
         }
         else {
@@ -83,6 +90,16 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
                 break;
             case "Register":
                 // TODO: Register Fragment
+                break;
+            case "Event 1":
+                EventDetailListFragment eventDetailListFragment=EventDetailListFragment.newInstance();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container,eventDetailListFragment,EventDetailListFragment.TAG).addToBackStack(EventDetailListFragment.TAG).commit();
+                break;
+            case "Event 2":
+
+                break;
+            case "Event 3":
+
                 break;
             default:
                 Toast.makeText(MainActivity.this, R.string.wrong_choice, Toast.LENGTH_SHORT).show();

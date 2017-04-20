@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/event_card_marginTop"
     android:layout_marginBottom="@dimen/event_card_marginBottom"
+    android:id="@+id/event_card_view"
     >
 
     <LinearLayout

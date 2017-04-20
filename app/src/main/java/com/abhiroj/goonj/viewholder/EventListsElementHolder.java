@@ -1,5 +1,6 @@
 package com.abhiroj.goonj.viewholder;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,11 +16,12 @@ public class EventListsElementHolder extends RecyclerView.ViewHolder {
 
     public ImageView event_card_image;
     public TextView  event_card_text;
+    public CardView  event_card_view;
 
     public EventListsElementHolder(View itemView) {
         super(itemView);
         event_card_image=(ImageView) itemView.findViewById(R.id.event_card_image);
         event_card_text=(TextView) itemView.findViewById(R.id.event_card_text);
-
+        event_card_view=(CardView) itemView.findViewById(R.id.event_card_view);
     }
 }

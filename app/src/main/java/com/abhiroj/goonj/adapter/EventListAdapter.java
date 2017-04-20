@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.abhiroj.goonj.R;
+import com.abhiroj.goonj.listener.OnCardTappedListener;
 import com.abhiroj.goonj.viewholder.EventListsElementHolder;
 import com.squareup.picasso.Picasso;
 
@@ -35,11 +36,18 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListsElementHold
     }
 
     @Override
-    public void onBindViewHolder(EventListsElementHolder holder, int position) {
+    public void onBindViewHolder(EventListsElementHolder holder, final int position) {
         Picasso picasso=Picasso.with(context);
         picasso.setLoggingEnabled(true);
         picasso.load(image_placeholder).resize(800,R.dimen.event_card_height).centerInside().into(holder.event_card_image);
         holder.event_card_text.setText(events[position]);
+        holder.event_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OnCardTappedListener cardTappedListener=(OnCardTappedListener) context;
+                cardTappedListener.onCardTapped(events[position]);
+            }
+        });
     }
 
     @Override
