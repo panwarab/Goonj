@@ -17,6 +17,6 @@ public class Constants {
     public static HashMap<String,Fragment> fragtag=new HashMap<>(); // Holds the reference of fragments, can be used to call member variables
     public static int SPAN_COUNT=2;
     public static final String card_titles[]=new String[]{"Events","Latest Updates","Team","Register"};
-
+    public static final String FRAG_KEY="fragment_state";
 
 }

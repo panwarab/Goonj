@@ -4,4 +4,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="event1">Event 1</string>
+    <string name="event2">Event 2</string>
+    <string name="event3">Event 3</string>
+    <string name="wrong_choice">Wrong Choice!</string>
 </resources>

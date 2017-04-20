@@ -3,10 +3,12 @@ package com.abhiroj.goonj.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.abhiroj.goonj.animator.DepthPageTransformer;
 import static com.abhiroj.goonj.data.Constants.HANDLER_POST_DELAYED_TIME;
 import static com.abhiroj.goonj.data.Constants.IMAGE_COUNT;
 import static com.abhiroj.goonj.data.Constants.SPAN_COUNT;
+import static com.abhiroj.goonj.data.Constants.fragtag;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 
 
@@ -30,7 +33,6 @@ import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 public class MainFragment extends Fragment {
 
     private ViewPager imagepager;
-    private ImageAdapter imageAdapter;
     public static final String TAG=MainFragment.class.getSimpleName();
     private View rootView;
     private int currentImage=0;
@@ -54,8 +56,16 @@ public class MainFragment extends Fragment {
 
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Toolbar toolbar=(Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
         // Inflate the layout for this fragment
         rootView=inflater.inflate(R.layout.fragment_main, container, false);
         setupImageSlider();
@@ -107,5 +117,11 @@ public class MainFragment extends Fragment {
 
     private Handler makeHandler() {
         return new Handler();
+    }
+
+    public static MainFragment newInstance() {
+        MainFragment mainFragment=new MainFragment();
+        fragtag.put(MainFragment.TAG, mainFragment);
+        return mainFragment;
     }
 }
