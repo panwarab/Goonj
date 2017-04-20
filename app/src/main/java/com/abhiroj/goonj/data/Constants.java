@@ -18,5 +18,6 @@ public class Constants {
     public static int SPAN_COUNT=2;
     public static final String card_titles[]=new String[]{"Events","Latest Updates","Team","Register"};
     public static final String FRAG_KEY="fragment_state";
+    public static final String events[]=new String[]{"Event 1","Event 2","Event 3"};
 
 }

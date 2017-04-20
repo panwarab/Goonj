@@ -6,4 +6,11 @@
     <dimen name="slider_height">225dp</dimen>
     <dimen name="element_padding">10dp</dimen>
     <dimen name="card_margin">10dp</dimen>
+    <dimen name="event_card_height">120dp</dimen>
+    <dimen name="card_text_pad">20dp</dimen>
+    <dimen name="event_card_marginTop">5dp</dimen>
+    <dimen name="event_card_marginBottom">15dp</dimen>
+    <dimen name="event_card_text_marginBottom">5dp</dimen>
+    <dimen name="event_card_text_marginTop">5dp</dimen>
+    <dimen name="event_card_image_height">100dp</dimen>
 </resources>
