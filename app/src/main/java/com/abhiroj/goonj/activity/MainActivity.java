@@ -1,6 +1,8 @@
 package com.abhiroj.goonj.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +22,14 @@ import com.abhiroj.goonj.fragment.EventDetailListFragment;
 import com.abhiroj.goonj.fragment.EventsFragment;
 import com.abhiroj.goonj.fragment.MainFragment;
 import com.abhiroj.goonj.listener.OnCardTappedListener;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
+
+import java.util.Arrays;
 
 import static com.abhiroj.goonj.data.Constants.FRAG_KEY;
 import static com.abhiroj.goonj.data.Constants.card_titles;
@@ -29,6 +39,7 @@ import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 
 public class MainActivity extends AppCompatActivity implements OnCardTappedListener {
 
+    private static final int RC_SIGN_IN = 1;
     private FragmentManager fragmentManager;
     private static final String TAG = MainActivity.class.getSimpleName();
     private MainFragment mainFragment;
@@ -36,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     private EventDetailListFragment eventDetailListFragment;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +61,23 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
         setSupportActionBar(toolbar);
         setupNavigationView();
         fragmentManager = getSupportFragmentManager();
+        firebaseAuth=FirebaseAuth.getInstance();
+        authStateListener=new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user=firebaseAuth.getCurrentUser();
+                if(checkNotNull(user))
+                {
+                    navigationView.getMenu().setGroupVisible(R.id.sign_in_group,true);
+                    navigationView.getMenu().findItem(R.id.sign_in).setVisible(true);
+                }
+                else
+                {
+                    navigationView.getMenu().setGroupVisible(R.id.sign_in_group,false);
+                    navigationView.getMenu().findItem(R.id.sign_in).setVisible(false);
+                }
+            }
+        };
         if(checkNotNull(savedInstanceState))
         {
             Fragment fragment=fragmentManager.getFragment(savedInstanceState,FRAG_KEY);
@@ -119,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+       getMenuInflater().inflate(R.menu.menu_main,menu);
         return true;
     }
 
@@ -128,23 +160,63 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        selectDrawerItem(id);
-
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                break;
+        }
+        return true;
     }
 
     private void selectDrawerItem(int id) {
     switch (id)
     {
-        case android.R.id.home:
-            drawerLayout.openDrawer(GravityCompat.START);
-            break;
         case R.id.sign_in:
-            // TODO: Sign-In Flow
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                    new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build()))
+                            .build(),
+                    RC_SIGN_IN);
+            break;
+        case R.id.sign_out:
+            // TODO: Sign-Out Flow
+            break;
+        case R.id.add_event:
+            Intent intent=new Intent(MainActivity.this,AddEvent.class);
+            startActivity(intent);
             break;
     }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        firebaseAuth.removeAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+       if(requestCode==RC_SIGN_IN)
+       {
+           if(resultCode==RESULT_OK)
+           {
+               Toast.makeText(MainActivity.this,R.string.signing_in,Toast.LENGTH_SHORT).show();
+           }
+           else
+           {
+               Toast.makeText(MainActivity.this,R.string.signing_in_error,Toast.LENGTH_SHORT).show();
+           }
+       }
     }
 
     @Override
@@ -158,7 +230,13 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     {
         drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectDrawerItem(item.getItemId());
+                return false;
+            }
+        });
     }
-
 
 }

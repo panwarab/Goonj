@@ -9,4 +9,9 @@
     <string name="event3">Event 3</string>
     <string name="wrong_choice">Wrong Choice!</string>
     <string name="sign_in">Sign In</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="add_event">Add Event</string>
+    <string name="signing_in">Signing In</string>
+    <string name="signing_in_error">Can\'t sign in</string>
+    <string name="title_activity_add_event">AddEvent</string>
 </resources>
