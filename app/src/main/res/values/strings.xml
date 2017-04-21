@@ -14,4 +14,16 @@
     <string name="signing_in">Signing In</string>
     <string name="signing_in_error">Can\'t sign in</string>
     <string name="title_activity_add_event">AddEvent</string>
+    <string name="eventname">Event Name</string>
+    <string name="eventdescription">Event Rules</string>
+    <string name="event_start_time">Event starts at</string>
+    <string name="event_stop_time">Event stops at</string>
+    <string name="event_date">Event Date</string>
+    <string name="eventfrom">Event Start Time</string>
+    <string name="event_venue">Event Venue</string>
+    <string name="submit_details">Submit Event</string>
+    <string name="set_time">Set Time</string>
+    <string name="set_date">Set Date</string>
+    <string name="fill_all">Please fill all the fields!</string>
+    <string name="title_activity_main3">Main3Activity</string>
 </resources>

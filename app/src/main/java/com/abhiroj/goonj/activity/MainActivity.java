@@ -40,6 +40,7 @@ import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 public class MainActivity extends AppCompatActivity implements OnCardTappedListener {
 
     private static final int RC_SIGN_IN = 1;
+    private static final int RC_ADDTOFIREBASE = 2;
     private FragmentManager fragmentManager;
     private static final String TAG = MainActivity.class.getSimpleName();
     private MainFragment mainFragment;
@@ -187,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             break;
         case R.id.add_event:
             Intent intent=new Intent(MainActivity.this,AddEvent.class);
-            startActivity(intent);
+            startActivityForResult(intent,RC_ADDTOFIREBASE);
             break;
     }
     }

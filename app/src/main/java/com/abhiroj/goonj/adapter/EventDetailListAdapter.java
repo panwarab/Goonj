@@ -73,12 +73,11 @@ public class EventDetailListAdapter extends RecyclerView.Adapter<EventDetailList
     @Override
     public void onBindViewHolder(EventDetailListHolder holder, int position) {
      EventData incoming=events.get(position);
-        holder.event_title.setText(incoming.getEvent_name());
-        holder.event_description.setText(incoming.getEvent_description());
-        holder.event_day.setText(incoming.getEvent_day());
-        holder.event_from_time.setText(incoming.getEvent_from_time());
-        holder.event_to_time.setText(incoming.getEvent_to_time());
-        holder.event_venue.setText(incoming.getEvent_venue());
+        holder.event_name.setText(incoming.getName());
+        holder.event_rules.setText(incoming.getRules());
+        holder.event_time.setText(incoming.getTime());
+        holder.event_date.setText(incoming.getDate());
+        holder.event_venue.setText(incoming.getVenue());
     }
 
     @Override
