@@ -1,11 +1,16 @@
 package com.abhiroj.goonj.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -29,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     private MainFragment mainFragment;
     private EventsFragment eventFragment;
     private EventDetailListFragment eventDetailListFragment;
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_dehaze);
         setSupportActionBar(toolbar);
+        setupNavigationView();
         fragmentManager = getSupportFragmentManager();
         if(checkNotNull(savedInstanceState))
         {
@@ -122,12 +130,21 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        selectDrawerItem(id);
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void selectDrawerItem(int id) {
+    switch (id)
+    {
+        case android.R.id.home:
+            drawerLayout.openDrawer(GravityCompat.START);
+            break;
+        case R.id.sign_in:
+            // TODO: Sign-In Flow
+            break;
+    }
     }
 
     @Override
@@ -136,4 +153,12 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             fragmentManager = getSupportFragmentManager();
         swapFragment(cardname);
     }
+
+    public void setupNavigationView()
+    {
+        drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView=(NavigationView) findViewById(R.id.nav_view);
+    }
+
+
 }

@@ -8,4 +8,5 @@
     <string name="event2">Event 2</string>
     <string name="event3">Event 3</string>
     <string name="wrong_choice">Wrong Choice!</string>
+    <string name="sign_in">Sign In</string>
 </resources>
