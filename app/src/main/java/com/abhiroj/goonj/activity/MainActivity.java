@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -18,10 +19,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.abhiroj.goonj.R;
+import com.abhiroj.goonj.data.Constants;
 import com.abhiroj.goonj.fragment.EventDetailListFragment;
 import com.abhiroj.goonj.fragment.EventsFragment;
 import com.abhiroj.goonj.fragment.MainFragment;
 import com.abhiroj.goonj.listener.OnCardTappedListener;
+import com.abhiroj.goonj.utils.Utility;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,8 +34,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 
+import static com.abhiroj.goonj.data.Constants.ARTS;
+import static com.abhiroj.goonj.data.Constants.DRAMATICS;
 import static com.abhiroj.goonj.data.Constants.FRAG_KEY;
-import static com.abhiroj.goonj.data.Constants.card_titles;
+import static com.abhiroj.goonj.data.Constants.KEY_EVENT_LIST;
+import static com.abhiroj.goonj.data.Constants.LITERARY;
 import static com.abhiroj.goonj.data.Constants.fragtag;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 
@@ -40,7 +46,7 @@ import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 public class MainActivity extends AppCompatActivity implements OnCardTappedListener {
 
     private static final int RC_SIGN_IN = 1;
-    private static final int RC_ADDTOFIREBASE = 2;
+    private static final int RC_FIREBASE_DATA_ADD = 2;
     private FragmentManager fragmentManager;
     private static final String TAG = MainActivity.class.getSimpleName();
     private MainFragment mainFragment;
@@ -79,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
                 }
             }
         };
-        if(checkNotNull(savedInstanceState))
+        if(checkNotNull(savedInstanceState) && savedInstanceState.size()!=0)
         {
             Fragment fragment=fragmentManager.getFragment(savedInstanceState,FRAG_KEY);
             if(fragment instanceof MainFragment)
@@ -108,12 +114,14 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(checkNotNull(fragmentManager))
-        {
-                String tag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
-            if(fragtag.get(tag).isAdded())
-            fragmentManager.putFragment(outState, FRAG_KEY, fragtag.get(tag));
+        if(checkNotNull(fragmentManager)) {
+            int lastfragonstack = fragmentManager.getBackStackEntryCount();
+            if (lastfragonstack >= 0) {
+                String tag = fragmentManager.getBackStackEntryAt(lastfragonstack-1).getName();
+                if (fragtag.get(tag).isAdded())
+                    fragmentManager.putFragment(outState, FRAG_KEY, fragtag.get(tag));
             }
+        }
     }
 
     private void swapFragment(String cardname) {
@@ -132,21 +140,28 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             case "Register":
                 // TODO: Register Fragment
                 break;
-            case "Event 1":
-                EventDetailListFragment eventDetailListFragment=EventDetailListFragment.newInstance();
-                fragmentManager.beginTransaction().replace(R.id.fragment_container,eventDetailListFragment,EventDetailListFragment.TAG).addToBackStack(EventDetailListFragment.TAG).commit();
+            case "Dramatics":
+                attachEventDetailListFragment(DRAMATICS);
                 break;
-            case "Event 2":
-
+            case "Literary":
+                attachEventDetailListFragment(LITERARY);
                 break;
-            case "Event 3":
-
+            case "Arts":
+                attachEventDetailListFragment(ARTS);
                 break;
             default:
                 Toast.makeText(MainActivity.this, R.string.wrong_choice, Toast.LENGTH_SHORT).show();
         }
 
 
+    }
+
+    private void attachEventDetailListFragment(String event) {
+        EventDetailListFragment eventDetailListFragment=EventDetailListFragment.newInstance();
+        Bundle bundle=new Bundle();
+        bundle.putString(KEY_EVENT_LIST,event);
+        eventDetailListFragment.setArguments(bundle);
+        fragmentManager.beginTransaction().replace(R.id.fragment_container,eventDetailListFragment,EventDetailListFragment.TAG).addToBackStack(EventDetailListFragment.TAG).commit();
     }
 
     @Override
@@ -187,10 +202,15 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             // TODO: Sign-Out Flow
             break;
         case R.id.add_event:
-            Intent intent=new Intent(MainActivity.this,AddEvent.class);
-            startActivityForResult(intent,RC_ADDTOFIREBASE);
+            addEvent();
             break;
     }
+    drawerLayout.closeDrawers();
+    }
+
+    private void addEvent() {
+        Intent intent=new Intent(MainActivity.this,AddEvent.class);
+        startActivityForResult(intent,RC_FIREBASE_DATA_ADD);
     }
 
     @Override
@@ -207,17 +227,20 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       if(requestCode==RC_SIGN_IN)
-       {
-           if(resultCode==RESULT_OK)
-           {
-               Toast.makeText(MainActivity.this,R.string.signing_in,Toast.LENGTH_SHORT).show();
-           }
-           else
-           {
-               Toast.makeText(MainActivity.this,R.string.signing_in_error,Toast.LENGTH_SHORT).show();
-           }
-       }
+      switch(requestCode) {
+          case RC_SIGN_IN:
+          if (resultCode == RESULT_OK) {
+              Toast.makeText(MainActivity.this, R.string.signing_in, Toast.LENGTH_SHORT).show();
+          } else {
+              Toast.makeText(MainActivity.this, R.string.signing_in_error, Toast.LENGTH_SHORT).show();
+          }
+          break;
+          case RC_FIREBASE_DATA_ADD:
+              if(resultCode ==RESULT_OK)
+              {
+                  Utility.showSnackBar(MainActivity.this,R.string.firebse_data_successfully_add);
+              }
+      }
     }
 
     @Override

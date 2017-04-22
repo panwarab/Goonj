@@ -10,6 +10,11 @@ import java.util.HashMap;
 
 public class Constants {
 
+
+
+    public static final String DRAMATICS="Dramatics";
+    public static final String LITERARY="Literary";
+    public static final String ARTS="Arts";
     public static final String image_placeholder="https://unsplash.it/512/512?random";
     public static final String IMAGE_SLIDER_TAG="position";
     public static final int IMAGE_COUNT=4;
@@ -18,6 +23,8 @@ public class Constants {
     public static int SPAN_COUNT=2;
     public static final String card_titles[]=new String[]{"Events","Latest Updates","Team","Register"};
     public static final String FRAG_KEY="fragment_state";
-    public static final String events[]=new String[]{"Event 1","Event 2","Event 3"};
+    public static final String events[]=new String[]{DRAMATICS,LITERARY,ARTS};
+    public static final String EVENT_PATH="events";
+    public static final String KEY_EVENT_LIST="TypeOfEvent";
 
 }

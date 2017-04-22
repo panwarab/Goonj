@@ -31,13 +31,28 @@ public class EventDetailListAdapter extends RecyclerView.Adapter<EventDetailList
         events=new ArrayList<>();
     }
 
+    /**
+     * Adds an event if it is not present
+     * @param eventData
+     */
     public void addEvent(EventData eventData)
     {
-        if(checkNotNull(events))
+        if(checkNotNull(events) && !checkIfEventPresent(eventData.getName()))
         {
             events.add(eventData);
             notifyDataSetChanged();
         }
+    }
+
+    private boolean checkIfEventPresent(String name) {
+    for(EventData event:events)
+    {
+        if(event.getName().equals(name))
+        {
+            return true;
+        }
+    }
+    return false;
     }
 
     public void addEventList(Collection<EventData> eventDatas)
@@ -83,5 +98,9 @@ public class EventDetailListAdapter extends RecyclerView.Adapter<EventDetailList
     @Override
     public int getItemCount() {
         return events.size();
+    }
+
+    public void addEventListFromStart(ArrayList<EventData> events) {
+
     }
 }

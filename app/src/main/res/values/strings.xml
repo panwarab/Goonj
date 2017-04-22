@@ -18,12 +18,17 @@
     <string name="eventdescription">Event Rules</string>
     <string name="event_start_time">Event starts at</string>
     <string name="event_stop_time">Event stops at</string>
-    <string name="event_date">Event Date</string>
-    <string name="eventfrom">Event Start Time</string>
+    <string name="event_date">Choose event date</string>
+    <string name="eventfrom">Choose event Start Time</string>
     <string name="event_venue">Event Venue</string>
     <string name="submit_details">Submit Event</string>
     <string name="set_time">Set Time</string>
     <string name="set_date">Set Date</string>
     <string name="fill_all">Please fill all the fields!</string>
     <string name="title_activity_main3">Main3Activity</string>
+    <string name="event_category">Choose event category</string>
+    <string name="firebase_error">Please try again!</string>
+    <string name="firebse_data_successfully_add">Event Submitted!</string>
+    <string name="add_another_event">Add Another Event</string>
+    <string name="category_error">Select a valid category!</string>
 </resources>

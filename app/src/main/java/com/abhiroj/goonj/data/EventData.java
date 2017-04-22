@@ -13,6 +13,7 @@ public class EventData {
     private String time;
     private String date;
     private String venue;
+    private String category;
 
     public String getName() {
         return name;
@@ -52,5 +53,13 @@ public class EventData {
 
     public void setVenue(String venue) {
         this.venue = venue;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }

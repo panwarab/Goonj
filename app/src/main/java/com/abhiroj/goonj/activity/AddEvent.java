@@ -2,11 +2,13 @@ package com.abhiroj.goonj.activity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
 import com.abhiroj.goonj.R;
+import com.abhiroj.goonj.data.Constants;
 import com.abhiroj.goonj.data.EventData;
 import com.abhiroj.goonj.utils.Utility;
 import com.google.firebase.database.ChildEventListener;
@@ -28,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
+import static com.abhiroj.goonj.data.Constants.EVENT_PATH;
+import static com.abhiroj.goonj.data.Constants.events;
 import static com.abhiroj.goonj.utils.Utility.HANDLER_DELAY_TIME;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 import static com.abhiroj.goonj.utils.Utility.showSnackBar;
@@ -41,6 +46,7 @@ public class AddEvent extends AppCompatActivity {
     EditText eventname;
     EditText eventrules;
     EditText eventvenue;
+    EditText eventcateg;
     private Button submit;
     private LinearLayout parent;
 
@@ -52,7 +58,6 @@ public class AddEvent extends AppCompatActivity {
               {
                   submit.setClickable(true);
                   submit.setTextColor(Color.BLACK);
-                  removeHandler();
               }
               else
               {
@@ -73,8 +78,10 @@ public class AddEvent extends AppCompatActivity {
     }
 
     private void removeHandler() {
-    fieldCheckHandler.removeCallbacksAndMessages(null);
-        fieldCheckHandler=null;
+        if(checkNotNull(fieldCheckHandler)) {
+            fieldCheckHandler.removeCallbacksAndMessages(null);
+            fieldCheckHandler = null;
+        }
     }
 
     private Handler fieldCheckHandler=makeHandler();
@@ -97,21 +104,52 @@ public class AddEvent extends AppCompatActivity {
         eventrules=(EditText) findViewById(R.id.event_rules);
         eventtime=(EditText) findViewById(R.id.event_time);
         eventvenue=(EditText) findViewById(R.id.event_venue);
+        eventcateg=(EditText) findViewById(R.id.event_category);
+        eventcateg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog=new AlertDialog.Builder(AddEvent.this).setTitle(R.string.event_category).setItems(events, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                      eventcateg.setText(events[which]);
+                    }
+                });
+                alertDialog.show();
+            }
+        });
         submit=(Button) findViewById(R.id.submit_event);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                   removeHandler();
                    EventData eventData=new EventData();
                     eventData.setName(getText(eventname));
                     eventData.setDate(getText(eventdate));
                     eventData.setRules(getText(eventrules));
                     eventData.setTime(getText(eventtime));
                     eventData.setVenue(getText(eventvenue));
+                    eventData.setCategory(getText(eventcateg));
+                    if(getFinalCategory(eventData.getCategory()))
+                    {
                     FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-                    final DatabaseReference databaseReference=firebaseDatabase.getReference().child("event");
-                    databaseReference.push().setValue(eventData);
+                    final DatabaseReference databaseReference=firebaseDatabase.getReference().child(EVENT_PATH).child(eventData.getCategory());
+                    databaseReference.push().setValue(eventData, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null) {
+                                showSnackBar(AddEvent.this, R.string.firebase_error);
+                            } else {
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        }
+                        });
             }
-        });
+            else
+                    {
+                        showToast(AddEvent.this,R.string.category_error);
+                    }
+        }});
         eventtime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +184,20 @@ public class AddEvent extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+    }
+
+    private boolean getFinalCategory(String category) {
+    switch(category)
+    {
+        case "Dramatics":
+            return true;
+        case "Literary":
+            return true;
+        case "Arts":
+            return true;
+        default:
+            return false;
+    }
     }
 
     private String getText(EditText field) {

@@ -5,8 +5,10 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.abhiroj.goonj.activity.MainActivity;
 import com.abhiroj.goonj.data.EventData;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,9 +45,10 @@ public class Utility {
         return eventDatas;
     }
 
-    public static void showSnackBar(Activity activity, int resID){
+    public static void showSnackBar(final Activity activity, int message){
         View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
-        Snackbar.make(rootView, resID, Snackbar.LENGTH_LONG).show();
+        Snackbar snackbar=Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     public static void showToast(Activity activity,int resId)
