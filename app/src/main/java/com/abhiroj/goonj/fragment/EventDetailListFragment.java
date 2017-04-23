@@ -72,7 +72,7 @@ public class EventDetailListFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int totalevents= (int) dataSnapshot.getChildrenCount();
-                Log.d(TAG,"Total Events:"+totalevents+" Data SnapCHt CHildren "+dataSnapshot.getChildren());
+                Log.d(TAG,"Total Events:"+totalevents+" Data Snapshot details "+dataSnapshot.getKey());
 
                 for (DataSnapshot data:dataSnapshot.getChildren())
                 {

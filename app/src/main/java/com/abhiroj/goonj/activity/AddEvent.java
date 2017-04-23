@@ -195,6 +195,14 @@ public class AddEvent extends AppCompatActivity {
             return true;
         case "Arts":
             return true;
+        case "Music":
+            return true;
+        case "Dance":
+            return true;
+        case "Photography":
+            return true;
+        case "Other":
+            return true;
         default:
             return false;
     }

@@ -31,4 +31,9 @@
     <string name="firebse_data_successfully_add">Event Submitted!</string>
     <string name="add_another_event">Add Another Event</string>
     <string name="category_error">Select a valid category!</string>
+    <string name="add_Coordinator">Add A Coordinator</string>
+    <string name="user_cancel_signin">Sign-In cancelled!</string>
+    <string name="no_network">You are not connected!</string>
+    <string name="techincal_issues">Snap! Sign-In issues.</string>
+    <string name="signout_success">Successfully signed out!</string>
 </resources>

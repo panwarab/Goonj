@@ -1,5 +1,7 @@
 package com.abhiroj.goonj.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,21 +28,38 @@ import com.abhiroj.goonj.fragment.MainFragment;
 import com.abhiroj.goonj.listener.OnCardTappedListener;
 import com.abhiroj.goonj.utils.Utility;
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.BuildConfig;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.auth.ResultCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 
+import static com.abhiroj.goonj.data.Constants.ADMINPATH;
 import static com.abhiroj.goonj.data.Constants.ARTS;
+import static com.abhiroj.goonj.data.Constants.DANCE;
 import static com.abhiroj.goonj.data.Constants.DRAMATICS;
 import static com.abhiroj.goonj.data.Constants.FRAG_KEY;
 import static com.abhiroj.goonj.data.Constants.KEY_EVENT_LIST;
 import static com.abhiroj.goonj.data.Constants.LITERARY;
+import static com.abhiroj.goonj.data.Constants.MUSIC;
+import static com.abhiroj.goonj.data.Constants.OTHERS;
+import static com.abhiroj.goonj.data.Constants.PHOTOGRAPHY;
+import static com.abhiroj.goonj.data.Constants.auth_mail;
 import static com.abhiroj.goonj.data.Constants.fragtag;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
+import static com.abhiroj.goonj.utils.Utility.showSnackBar;
+import static com.abhiroj.goonj.utils.Utility.showToast;
 
 
 public class MainActivity extends AppCompatActivity implements OnCardTappedListener {
@@ -58,11 +77,14 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private FirebaseUser user;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        activity=MainActivity.this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_dehaze);
         setSupportActionBar(toolbar);
@@ -72,16 +94,18 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
         authStateListener=new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user=firebaseAuth.getCurrentUser();
+                user=firebaseAuth.getCurrentUser();
                 if(checkNotNull(user))
                 {
-                    navigationView.getMenu().setGroupVisible(R.id.sign_in_group,true);
-                    navigationView.getMenu().findItem(R.id.sign_in).setVisible(true);
+                    showToast(activity,user.getEmail());
+                    navigationView.getMenu().findItem(R.id.sign_in).setVisible(false);
+                    navigationView.getMenu().setGroupVisible(R.id.sign_out_group,true);
                 }
                 else
                 {
-                    navigationView.getMenu().setGroupVisible(R.id.sign_in_group,false);
-                    navigationView.getMenu().findItem(R.id.sign_in).setVisible(false);
+                    signOut();
+                    navigationView.getMenu().findItem(R.id.sign_in).setVisible(true);
+                    navigationView.getMenu().setGroupVisible(R.id.sign_out_group,false);
                 }
             }
         };
@@ -109,6 +133,23 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             fragmentManager.beginTransaction().replace(R.id.fragment_container, mainfrag, MainFragment.TAG).addToBackStack(MainFragment.TAG).commit();
         }
     }
+
+    private boolean isAuthorized(String email) {
+    for (String s:auth_mail)
+    {
+        if(s.equals(email))
+        {
+            return true;
+        }
+    }
+    return false;
+    }
+
+    private void setNavItemsVisiblity(boolean admin) {
+
+    }
+
+
 
 
     @Override
@@ -149,8 +190,20 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             case "Arts":
                 attachEventDetailListFragment(ARTS);
                 break;
+            case "Photography":
+                attachEventDetailListFragment(PHOTOGRAPHY);
+                break;
+            case "Music":
+                attachEventDetailListFragment(MUSIC);
+                break;
+            case "Dance":
+                attachEventDetailListFragment(DANCE);
+                break;
+            case "Other":
+                attachEventDetailListFragment(OTHERS);
+                break;
             default:
-                Toast.makeText(MainActivity.this, R.string.wrong_choice, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.wrong_choice, Toast.LENGTH_SHORT).show();
         }
 
 
@@ -191,15 +244,14 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             startActivityForResult(
                     AuthUI.getInstance()
                             .createSignInIntentBuilder()
-                            .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-                                    new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build()))
+                            .setProviders(Arrays.asList(
+                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                            .setIsSmartLockEnabled(false)
                             .build(),
                     RC_SIGN_IN);
             break;
         case R.id.sign_out:
-            // TODO: Sign-Out Flow
+             signOut();
             break;
         case R.id.add_event:
             addEvent();
@@ -208,8 +260,22 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     drawerLayout.closeDrawers();
     }
 
+    private void signOut() {
+        if(user!=null)
+        {
+            AuthUI.getInstance()
+                    .signOut(this)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // user is now signed out
+                            showSnackBar(activity,R.string.signout_success);
+                        }
+                    });
+        }
+    }
+
     private void addEvent() {
-        Intent intent=new Intent(MainActivity.this,AddEvent.class);
+        Intent intent=new Intent(activity,AddEvent.class);
         startActivityForResult(intent,RC_FIREBASE_DATA_ADD);
     }
 
@@ -229,16 +295,46 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       switch(requestCode) {
           case RC_SIGN_IN:
-          if (resultCode == RESULT_OK) {
-              Toast.makeText(MainActivity.this, R.string.signing_in, Toast.LENGTH_SHORT).show();
-          } else {
-              Toast.makeText(MainActivity.this, R.string.signing_in_error, Toast.LENGTH_SHORT).show();
+              IdpResponse idpResponse=IdpResponse.fromResultIntent(data);
+              if(idpResponse!=null) {
+                  Log.d(TAG, idpResponse.getErrorCode() + "");
+                  showToast(activity, idpResponse.getErrorCode() + "");
+              }
+          if (resultCode == ResultCodes.OK) {
+              // Sign-In Successful
+              showSnackBar(activity, R.string.signing_in);
+          }
+          else
+          {
+              if(idpResponse==null)
+              {
+                  showSnackBar(activity,R.string.user_cancel_signin);
+              return;
+              }
+
+              if(idpResponse!=null && idpResponse.getErrorCode()== ErrorCodes.NO_NETWORK)
+              {
+                  showSnackBar(activity,R.string.no_network);
+              return;
+              }
+
+              if(idpResponse!=null && idpResponse.getErrorCode()==ErrorCodes.UNKNOWN_ERROR)
+              {
+                  showSnackBar(activity,R.string.techincal_issues);
+              return;
+              }
+
+              else
+              {
+                  showSnackBar(activity,R.string.techincal_issues);
+              }
+
           }
           break;
           case RC_FIREBASE_DATA_ADD:
               if(resultCode ==RESULT_OK)
               {
-                  Utility.showSnackBar(MainActivity.this,R.string.firebse_data_successfully_add);
+                  Utility.showSnackBar(activity,R.string.firebse_data_successfully_add);
               }
       }
     }

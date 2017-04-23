@@ -51,9 +51,20 @@ public class Utility {
         snackbar.show();
     }
 
+    public static void showSnackBar(final Activity activity,String message){
+        View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+        Snackbar snackbar=Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
     public static void showToast(Activity activity,int resId)
     {
         Toast.makeText(activity,resId,Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showToast(Activity activity,String message)
+    {
+        Toast.makeText(activity,message,Toast.LENGTH_SHORT).show();
     }
 
 }
