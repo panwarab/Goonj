@@ -34,6 +34,7 @@
 
             <EditText
                 android:id="@+id/event_category"
+                android:focusableInTouchMode="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/event_category" />
@@ -58,6 +59,7 @@
                 android:id="@+id/event_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
                 android:hint="@string/eventfrom" />
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -68,6 +70,7 @@
             <EditText
                 android:id="@+id/event_date"
                 android:layout_width="match_parent"
+                android:focusableInTouchMode="false"
                 android:layout_height="wrap_content"
                 android:hint="@string/event_date" />
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
@@ -83,13 +86,23 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/event_venue" />
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
         <Button
             android:id="@+id/submit_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/submit_details"/>
 
+        <ProgressBar
+            android:gravity="center"
+            android:id="@+id/show_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+</RelativeLayout>
 
 
     </LinearLayout>

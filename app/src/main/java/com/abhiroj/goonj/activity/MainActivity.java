@@ -55,6 +55,7 @@ import static com.abhiroj.goonj.data.Constants.LITERARY;
 import static com.abhiroj.goonj.data.Constants.MUSIC;
 import static com.abhiroj.goonj.data.Constants.OTHERS;
 import static com.abhiroj.goonj.data.Constants.PHOTOGRAPHY;
+import static com.abhiroj.goonj.data.Constants.RESULT_FROM_ADD;
 import static com.abhiroj.goonj.data.Constants.auth_mail;
 import static com.abhiroj.goonj.data.Constants.fragtag;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
@@ -97,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
                 user=firebaseAuth.getCurrentUser();
                 if(checkNotNull(user))
                 {
-                    showToast(activity,user.getEmail());
                     navigationView.getMenu().findItem(R.id.sign_in).setVisible(false);
                     navigationView.getMenu().setGroupVisible(R.id.sign_out_group,true);
                 }
@@ -159,7 +159,8 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             int lastfragonstack = fragmentManager.getBackStackEntryCount();
             if (lastfragonstack >= 0) {
                 String tag = fragmentManager.getBackStackEntryAt(lastfragonstack-1).getName();
-                if (fragtag.get(tag).isAdded())
+                Fragment fragment=fragtag.get(tag);
+                if (fragment!=null && fragment.isAdded())
                     fragmentManager.putFragment(outState, FRAG_KEY, fragtag.get(tag));
             }
         }
@@ -332,10 +333,9 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
           }
           break;
           case RC_FIREBASE_DATA_ADD:
-              if(resultCode ==RESULT_OK)
-              {
-                  Utility.showSnackBar(activity,R.string.firebse_data_successfully_add);
-              }
+              String message=data.getExtras().getString(RESULT_FROM_ADD);
+                  Utility.showSnackBar(activity,message);
+
       }
     }
 

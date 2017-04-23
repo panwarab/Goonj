@@ -3,6 +3,7 @@ package com.abhiroj.goonj.activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,12 +12,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.abhiroj.goonj.R;
@@ -32,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 
 import static com.abhiroj.goonj.data.Constants.EVENT_PATH;
+import static com.abhiroj.goonj.data.Constants.RESULT_FROM_ADD;
 import static com.abhiroj.goonj.data.Constants.events;
 import static com.abhiroj.goonj.utils.Utility.HANDLER_DELAY_TIME;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
@@ -41,6 +48,7 @@ import static com.abhiroj.goonj.utils.Utility.showToast;
 public class AddEvent extends AppCompatActivity {
 
     private static final String TAG=AddEvent.class.getSimpleName();
+    private static final int RESULT_BAD = 2;
     private EditText eventtime;
     private EditText eventdate;
     EditText eventname;
@@ -49,6 +57,7 @@ public class AddEvent extends AppCompatActivity {
     EditText eventcateg;
     private Button submit;
     private LinearLayout parent;
+    private ProgressBar progressBar;
 
 
     private Runnable fieldCheckRunnable=new Runnable() {
@@ -63,6 +72,7 @@ public class AddEvent extends AppCompatActivity {
               {
                   submit.setClickable(false);
                   submit.setTextColor(Color.LTGRAY);
+                  progressBar.setVisibility(View.INVISIBLE);
                   fieldCheckHandler.postDelayed(fieldCheckRunnable,HANDLER_DELAY_TIME);
               }
         }
@@ -105,6 +115,10 @@ public class AddEvent extends AppCompatActivity {
         eventtime=(EditText) findViewById(R.id.event_time);
         eventvenue=(EditText) findViewById(R.id.event_venue);
         eventcateg=(EditText) findViewById(R.id.event_category);
+        progressBar=(ProgressBar) findViewById(R.id.show_progress);
+
+
+
         eventcateg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +136,9 @@ public class AddEvent extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                    removeHandler();
+                   submit.setOnClickListener(null);
+                   submit.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                    EventData eventData=new EventData();
                     eventData.setName(getText(eventname));
                     eventData.setDate(getText(eventdate));
@@ -129,26 +146,25 @@ public class AddEvent extends AppCompatActivity {
                     eventData.setTime(getText(eventtime));
                     eventData.setVenue(getText(eventvenue));
                     eventData.setCategory(getText(eventcateg));
-                    if(getFinalCategory(eventData.getCategory()))
-                    {
                     FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+                        firebaseDatabase.setPersistenceEnabled(true);
                     final DatabaseReference databaseReference=firebaseDatabase.getReference().child(EVENT_PATH).child(eventData.getCategory());
                     databaseReference.push().setValue(eventData, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            Intent intent=new Intent();
                             if (databaseError != null) {
-                                showSnackBar(AddEvent.this, R.string.firebase_error);
+                                intent.putExtra(RESULT_FROM_ADD,databaseError.getMessage());
+                                setResult(RESULT_CANCELED,intent);
+                                finish();
                             } else {
-                                setResult(RESULT_OK);
+                                intent.putExtra(RESULT_FROM_ADD,"Event Added!");
+                                setResult(RESULT_OK,intent);
                                 finish();
                             }
                         }
                         });
-            }
-            else
-                    {
-                        showToast(AddEvent.this,R.string.category_error);
-                    }
+
         }});
         eventtime.setOnClickListener(new View.OnClickListener() {
             @Override

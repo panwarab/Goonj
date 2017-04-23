@@ -35,5 +35,6 @@ public class Constants {
     public static final String SUBADMINPATH="sub_admins";
     public static final String ADMINPATH="admins";
     public static final String auth_mail[]=new String[]{ADMIN_ANIRUDH,ADMIN_SUMIT};
+    public static final String RESULT_FROM_ADD="AddEventResult";
 
 }

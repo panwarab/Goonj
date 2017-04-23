@@ -14,4 +14,5 @@
     <dimen name="event_card_text_marginTop">5dp</dimen>
     <dimen name="event_card_image_height">150dp</dimen>
     <dimen name="list_item_margin">15dp</dimen>
+    <dimen name="rules_margintop">5dp</dimen>
 </resources>

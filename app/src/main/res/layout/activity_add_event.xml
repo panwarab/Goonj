@@ -22,4 +22,6 @@
 
     <include layout="@layout/content_add_event" />
 
+
+
 </android.support.design.widget.CoordinatorLayout>
