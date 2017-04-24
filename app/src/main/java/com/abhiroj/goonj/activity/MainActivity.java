@@ -3,6 +3,7 @@ package com.abhiroj.goonj.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,17 +23,20 @@ import android.widget.Toast;
 
 import com.abhiroj.goonj.R;
 import com.abhiroj.goonj.data.Constants;
+import com.abhiroj.goonj.data.User;
 import com.abhiroj.goonj.fragment.EventDetailListFragment;
 import com.abhiroj.goonj.fragment.EventsFragment;
 import com.abhiroj.goonj.fragment.MainFragment;
 import com.abhiroj.goonj.listener.OnCardTappedListener;
 import com.abhiroj.goonj.utils.Utility;
+import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.BuildConfig;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,6 +49,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 
+import io.fabric.sdk.android.Fabric;
+
 import static com.abhiroj.goonj.data.Constants.ADMINPATH;
 import static com.abhiroj.goonj.data.Constants.ARTS;
 import static com.abhiroj.goonj.data.Constants.DANCE;
@@ -55,7 +61,9 @@ import static com.abhiroj.goonj.data.Constants.LITERARY;
 import static com.abhiroj.goonj.data.Constants.MUSIC;
 import static com.abhiroj.goonj.data.Constants.OTHERS;
 import static com.abhiroj.goonj.data.Constants.PHOTOGRAPHY;
+import static com.abhiroj.goonj.data.Constants.PREFS;
 import static com.abhiroj.goonj.data.Constants.RESULT_FROM_ADD;
+import static com.abhiroj.goonj.data.Constants.USER_ROOT;
 import static com.abhiroj.goonj.data.Constants.auth_mail;
 import static com.abhiroj.goonj.data.Constants.fragtag;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
@@ -80,32 +88,36 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     private DatabaseReference databaseReference;
     private FirebaseUser user;
     private Activity activity;
+    private DatabaseReference user_root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         activity=MainActivity.this;
+        Fabric.with(this, new Crashlytics());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_dehaze);
         setSupportActionBar(toolbar);
         setupNavigationView();
+        firebaseDatabase=FirebaseDatabase.getInstance();
+        databaseReference=firebaseDatabase.getReference();
+        user_root=databaseReference.child(USER_ROOT);
         fragmentManager = getSupportFragmentManager();
         firebaseAuth=FirebaseAuth.getInstance();
         authStateListener=new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user=firebaseAuth.getCurrentUser();
-                if(checkNotNull(user))
-                {
+                if(checkNotNull(user)) {
+                    userStatus(user);
                     navigationView.getMenu().findItem(R.id.sign_in).setVisible(false);
-                    navigationView.getMenu().setGroupVisible(R.id.sign_out_group,true);
+                    navigationView.getMenu().findItem(R.id.sign_out).setVisible(true);
                 }
                 else
                 {
-                    signOut();
                     navigationView.getMenu().findItem(R.id.sign_in).setVisible(true);
-                    navigationView.getMenu().setGroupVisible(R.id.sign_out_group,false);
+                    navigationView.getMenu().findItem(R.id.sign_out).setVisible(false);
                 }
             }
         };
@@ -133,6 +145,40 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             fragmentManager.beginTransaction().replace(R.id.fragment_container, mainfrag, MainFragment.TAG).addToBackStack(MainFragment.TAG).commit();
         }
     }
+
+    private void userStatus(final FirebaseUser  user) {
+      databaseReference.child(USER_ROOT).child(user.getUid()).addValueEventListener(new ValueEventListener() {
+          @Override
+          public void onDataChange(DataSnapshot dataSnapshot) {
+               if(dataSnapshot.exists())
+               {
+                   User user=dataSnapshot.getValue(User.class);
+                   navigationView.getMenu().findItem(R.id.add_update).setVisible(user.getAdmin());
+               }
+               else
+               {
+                   User newuser=new User();
+                   newuser.setProvider(user.getProviderId());
+                   newuser.setUname(user.getDisplayName());
+                   newuser.setUmail(user.getEmail());
+                   newuser.setUid(user.getUid());
+                   newuser.setAdmin(false); // As the user is new, we set admin to false
+                   databaseReference.child(USER_ROOT).child(newuser.getUid()).setValue(newuser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                       @Override
+                       public void onSuccess(Void aVoid) {
+                           showSnackBar(MainActivity.this,"Thank You!");
+                       }
+                   });
+               }
+          }
+
+          @Override
+          public void onCancelled(DatabaseError databaseError) {
+              showSnackBar(MainActivity.this,databaseError.getMessage());
+          }
+      });
+    }
+
 
     private boolean isAuthorized(String email) {
     for (String s:auth_mail)
@@ -254,9 +300,6 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
         case R.id.sign_out:
              signOut();
             break;
-        case R.id.add_event:
-            addEvent();
-            break;
     }
     drawerLayout.closeDrawers();
     }
@@ -270,15 +313,12 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
                         public void onComplete(@NonNull Task<Void> task) {
                             // user is now signed out
                             showSnackBar(activity,R.string.signout_success);
+                            navigationView.getMenu().findItem(R.id.add_update).setVisible(false);
                         }
                     });
         }
     }
 
-    private void addEvent() {
-        Intent intent=new Intent(activity,AddEvent.class);
-        startActivityForResult(intent,RC_FIREBASE_DATA_ADD);
-    }
 
     @Override
     protected void onResume() {
@@ -299,7 +339,6 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
               IdpResponse idpResponse=IdpResponse.fromResultIntent(data);
               if(idpResponse!=null) {
                   Log.d(TAG, idpResponse.getErrorCode() + "");
-                  showToast(activity, idpResponse.getErrorCode() + "");
               }
           if (resultCode == ResultCodes.OK) {
               // Sign-In Successful
@@ -350,6 +389,7 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     {
         drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().findItem(R.id.add_update).setVisible(false);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

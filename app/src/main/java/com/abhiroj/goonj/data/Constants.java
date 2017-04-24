@@ -36,5 +36,7 @@ public class Constants {
     public static final String ADMINPATH="admins";
     public static final String auth_mail[]=new String[]{ADMIN_ANIRUDH,ADMIN_SUMIT};
     public static final String RESULT_FROM_ADD="AddEventResult";
+    public static final String USER_ROOT="Users";
+    public static final String PREFS="Goonj_app";
 
 }

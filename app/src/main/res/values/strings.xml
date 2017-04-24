@@ -35,6 +35,9 @@
     <string name="user_cancel_signin">Sign-In cancelled!</string>
     <string name="no_network">You are not connected!</string>
     <string name="techincal_issues">Snap! Sign-In issues.</string>
-    <string name="signout_success">Successfully signed out!</string>
+    <string name="signout_success">Signed out!</string>
     <string name="rules">Rules :-</string>
+    <string name="add_update">Release Update</string>
+    <string name="user_add">Enjoy the Frenzy!</string>
+    <string name="server_record_fail">Try again to request Admin access!</string>
 </resources>
