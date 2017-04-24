@@ -40,4 +40,6 @@
     <string name="add_update">Release Update</string>
     <string name="user_add">Enjoy the Frenzy!</string>
     <string name="server_record_fail">Try again to request Admin access!</string>
+    <string name="crit">Criteria :-</string>
+    <string name="points">Points :-</string>
 </resources>

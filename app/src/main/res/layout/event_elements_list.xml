@@ -12,10 +12,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/event_card_image"
+        <TextView
+            android:id="@+id/event_fill_textview"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/event_card_image_height" />
+            android:gravity="center"
+            android:textColor="@color/textFrontColor"
+            android:background="@color/textViewBackground"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/event_card_image_height"/>
 
         <TextView
             android:id="@+id/event_card_text"

@@ -37,10 +37,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListsElementHold
 
     @Override
     public void onBindViewHolder(EventListsElementHolder holder, final int position) {
-        Picasso picasso=Picasso.with(context);
-        picasso.setLoggingEnabled(true);
-        picasso.load(image_placeholder).resize(800,R.dimen.event_card_height).centerInside().into(holder.event_card_image);
         holder.event_card_text.setText(events[position]);
+        holder.event_fill_textview.setText(events[position].charAt(0)+"");
         holder.event_card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

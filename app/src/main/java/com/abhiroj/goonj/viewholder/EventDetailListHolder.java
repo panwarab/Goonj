@@ -15,9 +15,8 @@ public class EventDetailListHolder extends RecyclerView.ViewHolder {
 
     public TextView event_name;
     public TextView event_rules;
-    public TextView event_time;
-    public TextView event_date;
-    public TextView event_venue;
+    public TextView event_crit;
+    public TextView event_point;
 
 
     /**
@@ -28,8 +27,7 @@ public class EventDetailListHolder extends RecyclerView.ViewHolder {
         super(itemView);
         event_name=(TextView) itemView.findViewById(R.id.event_name);
         event_rules=(TextView) itemView.findViewById(R.id.event_rules);
-        event_time=(TextView) itemView.findViewById(R.id.event_time);
-        event_date=(TextView) itemView.findViewById(R.id.event_date);
-        event_venue=(TextView) itemView.findViewById(R.id.event_venue);
+        event_crit=(TextView) itemView.findViewById(R.id.event_criteria);
+        event_point=(TextView) itemView.findViewById(R.id.event_points);
     }
 }

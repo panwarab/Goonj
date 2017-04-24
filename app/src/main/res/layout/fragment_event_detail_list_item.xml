@@ -37,47 +37,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
         <View
             android:layout_marginTop="@dimen/rules_margintop"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="#c0c0c0"/>
-
-        <LinearLayout
+        <TextView
             android:layout_marginTop="@dimen/rules_margintop"
+            android:text="@string/crit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <TextView
+            android:id="@+id/event_criteria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <View
+            android:layout_marginTop="@dimen/rules_margintop"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#c0c0c0"/>
+        <TextView
+            android:layout_marginTop="@dimen/rules_margintop"
+            android:text="@string/points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <TextView
+            android:id="@+id/event_points"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/event_time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-
-
-            <TextView
-                android:id="@+id/event_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/event_venue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-
-        </LinearLayout>
 
     </LinearLayout>
 

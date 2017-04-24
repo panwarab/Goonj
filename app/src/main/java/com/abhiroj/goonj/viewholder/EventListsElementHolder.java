@@ -14,13 +14,13 @@ import com.abhiroj.goonj.R;
 
 public class EventListsElementHolder extends RecyclerView.ViewHolder {
 
-    public ImageView event_card_image;
+    public TextView event_fill_textview;
     public TextView  event_card_text;
     public CardView  event_card_view;
 
     public EventListsElementHolder(View itemView) {
         super(itemView);
-        event_card_image=(ImageView) itemView.findViewById(R.id.event_card_image);
+        event_fill_textview=(TextView) itemView.findViewById(R.id.event_fill_textview);
         event_card_text=(TextView) itemView.findViewById(R.id.event_card_text);
         event_card_view=(CardView) itemView.findViewById(R.id.event_card_view);
     }

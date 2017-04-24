@@ -27,7 +27,7 @@ public class Constants {
     public static final int HANDLER_POST_DELAYED_TIME=5000; // In milli seconds
     public static HashMap<String,Fragment> fragtag=new HashMap<>(); // Holds the reference of fragments, can be used to call member variables
     public static int SPAN_COUNT=2;
-    public static final String card_titles[]=new String[]{"Events","Latest Updates","Team","Register"};
+    public static final String card_titles[]=new String[]{"Events","Latest Updates","Team"};
     public static final String FRAG_KEY="fragment_state";
     public static final String events[]=new String[]{DRAMATICS,LITERARY,ARTS,MUSIC,DANCE,PHOTOGRAPHY,OTHERS};
     public static final String EVENT_PATH="events";

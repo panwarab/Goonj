@@ -30,7 +30,6 @@ import static com.abhiroj.goonj.data.Constants.KEY_EVENT_LIST;
 import static com.abhiroj.goonj.data.Constants.fragtag;
 import static com.abhiroj.goonj.data.EventDataContract.category;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
-import static com.abhiroj.goonj.utils.Utility.generateFakeData;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,7 +76,6 @@ public class EventDetailListFragment extends Fragment {
                 for (DataSnapshot data:dataSnapshot.getChildren())
                 {
                     EventData eventData=data.getValue(EventData.class);
-
                     eventDetailListAdapter.addEvent(eventData);
                 }
 

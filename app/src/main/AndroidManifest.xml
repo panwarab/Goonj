@@ -11,7 +11,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:debuggable="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
@@ -26,7 +25,7 @@
         <meta-data
             tools:replace="android:value"
             android:name="io.fabric.ApiKey"
-            android:value="@string/fabric_api_key"
+            android:value="011345062a36a1ac3727e9e59ddfefdf230917eb"
             />
     </application>
 

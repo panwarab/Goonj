@@ -27,23 +27,6 @@ public class Utility {
         return o!=null;
     }
 
-    public static ArrayList<EventData> generateFakeData()
-    {
-        ArrayList<EventData> eventDatas=new ArrayList<>();
-        for (int i=0;i<5;i++)
-        {
-            EventData eventData=new EventData();
-            eventData.setName("ABC");
-            eventData.setRules("Event X");
-            eventData.setVenue("Hall");
-            Calendar calendar=Calendar.getInstance();
-            eventData.setTime(calendar.getTime().toString());
-            Date date=new Date();
-            eventData.setDate(date.toString());
-            eventDatas.add(eventData);
-        }
-        return eventDatas;
-    }
 
     public static void showSnackBar(final Activity activity, int message){
         View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);

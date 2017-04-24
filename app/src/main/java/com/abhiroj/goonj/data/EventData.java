@@ -1,5 +1,9 @@
 package com.abhiroj.goonj.data;
 
+import android.util.Log;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.Date;
 
 /**
@@ -8,12 +12,11 @@ import java.util.Date;
 
 public class EventData {
 
+    private String crit;
     private String name;
+    private String point;
     private String rules;
-    private String time;
-    private String date;
-    private String venue;
-    private String category;
+
 
     public String getName() {
         return name;
@@ -21,6 +24,14 @@ public class EventData {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPoint() {
+        return point;
+    }
+
+    public void setPoint(String point) {
+        this.point = point;
     }
 
     public String getRules() {
@@ -31,35 +42,11 @@ public class EventData {
         this.rules = rules;
     }
 
-    public String getTime() {
-        return time;
+    public String getCrit() {
+        return crit;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getVenue() {
-        return venue;
-    }
-
-    public void setVenue(String venue) {
-        this.venue = venue;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getCategory() {
-        return category;
+    public void setCrit(String crit) {
+        this.crit = crit;
     }
 }

@@ -90,69 +90,10 @@ public class EventDetailListAdapter extends RecyclerView.Adapter<EventDetailList
     @Override
     public void onBindViewHolder(EventDetailListHolder holder, int position) {
      EventData incoming=events.get(position);
-        holder.event_name.setText(incoming.getName());
+     holder.event_name.setText(incoming.getName());
+        holder.event_point.setText(incoming.getPoint());
+        holder.event_crit.setText(incoming.getCrit());
         holder.event_rules.setText(incoming.getRules());
-        holder.event_time.setText(get12HourConversion(incoming.getTime()));
-        holder.event_date.setText(getNormailizedDate(incoming.getDate()));
-        holder.event_venue.setText(incoming.getVenue());
-    }
-
-    private String getNormailizedDate(String date) {
-        String[] d=date.split("\\.");
-        StringBuffer stringBuffer=new StringBuffer();
-        stringBuffer.append(getMonthName(d[1])).append(" \'").append(d[0]);
-        return stringBuffer.toString();
-    }
-
-    private String getMonthName(String s) {
-    switch (Integer.parseInt(s))
-    {
-        case 1:
-            return "Jan";
-        case 2:
-            return "Feb";
-        case 3:
-            return "Mar";
-        case 4:
-            return "Apr";
-        case 5:
-            return "May";
-        case 6:
-            return "Jun";
-        case 7:
-            return "July";
-        case 8:
-            return "Aug";
-        case 9:
-            return "Sep";
-        case 10:
-            return "Oct";
-        case 11:
-            return "Nov";
-        case 12:
-            return "Dec";
-    }
-
-    return "Apr";
-    }
-
-    private String get12HourConversion(String time) {
-    String hhmm[]=time.split(":");
-        boolean am=false;
-        StringBuffer stringBuffer=new StringBuffer();
-        int hour=Integer.parseInt(hhmm[0]);
-        if(hour<12)
-        {
-
-            am=true;
-        }
-        else
-        {
-            hour=hour%12;
-            am=false;
-        }
-        stringBuffer.append(hour).append(":").append((hhmm[1].length()==1)?("0"+hhmm[1]):hhmm[1]).append((am)?" AM":" PM");
-        return stringBuffer.toString();
     }
 
     @Override
