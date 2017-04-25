@@ -16,4 +16,12 @@
     <dimen name="list_item_margin">15dp</dimen>
     <dimen name="rules_margintop">5dp</dimen>
     <dimen name="text_size">20dp</dimen>
+    <dimen name="text_height_150">150sp</dimen>
+    <dimen name="text_margin">10dp</dimen>
+    <dimen name="handler_button_size">16sp</dimen>
+    <dimen name="upd_title">32sp</dimen>
+    <dimen name="upd_mess">24dp</dimen>
+    <dimen name="upd_by">18dp</dimen>
+    <dimen name="image_card">96dp</dimen>
+    <dimen name="card_text">18dp</dimen>
 </resources>

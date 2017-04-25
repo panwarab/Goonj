@@ -1,6 +1,7 @@
 package com.abhiroj.goonj.activity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,20 +10,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.abhiroj.goonj.R;
+import com.abhiroj.goonj.data.UpdateData;
 import com.abhiroj.goonj.data.User;
 import com.abhiroj.goonj.fragment.EventDetailListFragment;
 import com.abhiroj.goonj.fragment.EventsFragment;
 import com.abhiroj.goonj.fragment.MainFragment;
 import com.abhiroj.goonj.fragment.TeamListFragment;
+import com.abhiroj.goonj.fragment.UpdateFragment;
 import com.abhiroj.goonj.listener.OnCardTappedListener;
+import com.abhiroj.goonj.listener.OnDialogResponse;
 import com.abhiroj.goonj.utils.Utility;
 import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
@@ -30,6 +39,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,9 +48,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -54,15 +67,19 @@ import static com.abhiroj.goonj.data.Constants.MUSIC;
 import static com.abhiroj.goonj.data.Constants.OTHERS;
 import static com.abhiroj.goonj.data.Constants.PHOTOGRAPHY;
 import static com.abhiroj.goonj.data.Constants.RESULT_FROM_ADD;
+import static com.abhiroj.goonj.data.Constants.RQ_UPDATE;
+import static com.abhiroj.goonj.data.Constants.UPDATE_MESSAGE;
+import static com.abhiroj.goonj.data.Constants.UPDATE_TITLE;
+import static com.abhiroj.goonj.data.Constants.UPD_ROOT;
 import static com.abhiroj.goonj.data.Constants.USER_ROOT;
 import static com.abhiroj.goonj.data.Constants.auth_mail;
 import static com.abhiroj.goonj.data.Constants.fragtag;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 import static com.abhiroj.goonj.utils.Utility.showSnackBar;
+import static com.abhiroj.goonj.utils.Utility.showToast;
 
 
-
-public class MainActivity extends AppCompatActivity implements OnCardTappedListener {
+public class MainActivity extends AppCompatActivity implements OnCardTappedListener{
 
     private static final int RC_SIGN_IN = 1;
     private static final int RC_FIREBASE_DATA_ADD = 2;
@@ -81,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     private Activity activity;
     private DatabaseReference user_root;
     private TeamListFragment teamListFragment;
+    private AlertDialog updateDialog;
+    private UpdateFragment updateFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +150,11 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
                 eventDetailListFragment=(EventDetailListFragment) fragment;
                 fragmentManager.beginTransaction().replace(R.id.fragment_container,eventDetailListFragment,EventDetailListFragment.TAG).commit();
             }
+            else if(fragment instanceof UpdateFragment)
+            {
+                updateFragment=(UpdateFragment) fragment;
+                fragmentManager.beginTransaction().replace(R.id.fragment_container,updateFragment,UpdateFragment.TAG).commit();
+            }
             else if(fragment instanceof TeamListFragment)
             {
                 teamListFragment=(TeamListFragment) fragment;
@@ -177,21 +201,6 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     }
 
 
-    private boolean isAuthorized(String email) {
-    for (String s:auth_mail)
-    {
-        if(s.equals(email))
-        {
-            return true;
-        }
-    }
-    return false;
-    }
-
-    private void setNavItemsVisiblity(boolean admin) {
-
-    }
-
 
 
 
@@ -215,8 +224,9 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
                 EventsFragment eventsFragment = EventsFragment.newInstance();
                 fragmentManager.beginTransaction().replace(R.id.fragment_container, eventsFragment, EventsFragment.TAG).addToBackStack(EventsFragment.TAG).commit();
                 break;
-            case "Latest Updates":
-                //TODO: Latest Updates Fragment
+            case "Updates":
+                UpdateFragment updateFragment= UpdateFragment.newInstance();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, updateFragment, UpdateFragment.TAG).addToBackStack(UpdateFragment.TAG).commit();
                 break;
             case "Team":
                TeamListFragment teamListFragment= TeamListFragment.newInstance();
@@ -260,8 +270,7 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-       getMenuInflater().inflate(R.menu.menu_main,menu);
+
         return true;
     }
 
@@ -282,20 +291,28 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     switch (id)
     {
         case R.id.sign_in:
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setProviders(Arrays.asList(
-                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-                            .setIsSmartLockEnabled(false)
-                            .build(),
-                    RC_SIGN_IN);
+            signIn();
             break;
         case R.id.sign_out:
              signOut();
             break;
+        case R.id.add_update:
+            startActivityForResult(new Intent(MainActivity.this,ReleaseUpdate.class),RQ_UPDATE);
+            break;
     }
     drawerLayout.closeDrawers();
+    }
+
+    private void signIn() {
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setProviders(Arrays.asList(
+                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                        .setIsSmartLockEnabled(false)
+                        .build(),
+                RC_SIGN_IN);
+
     }
 
     private void signOut() {
@@ -368,8 +385,45 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
           case RC_FIREBASE_DATA_ADD:
               String message=data.getExtras().getString(RESULT_FROM_ADD);
                   Utility.showSnackBar(activity,message);
+          break;
+          case RQ_UPDATE:
+              if(resultCode==RESULT_OK)
+              {
+                  if(user!=null) {
+                      UpdateData updateData = new UpdateData();
+                      updateData.setTitle(data.getExtras().getString(UPDATE_TITLE));
+                      updateData.setMessage(data.getExtras().getString(UPDATE_MESSAGE));
+                      updateData.setUpdate_by(user.getDisplayName());
+                      addUpdateToFirebase(updateData);
+                  }
+                  else
+                  {
+                      showSnackBar(MainActivity.this,R.string.login_require);
+                  }
 
+              }
+              else if(requestCode==RESULT_CANCELED)
+              {
+                  showSnackBar(MainActivity.this,R.string.upd_no_rel);
+              }
+              break;
       }
+    }
+
+
+    private void addUpdateToFirebase(UpdateData updateData) {
+    DatabaseReference database=FirebaseDatabase.getInstance().getReference(UPD_ROOT);
+        database.push().setValue(updateData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                showSnackBar(MainActivity.this,R.string.upd_released);
+            }
+        }).addOnFailureListener(MainActivity.this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                showSnackBar(MainActivity.this,R.string.upd_not_released);
+            }
+        });
     }
 
     @Override
@@ -383,6 +437,9 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     {
         drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView) findViewById(R.id.nav_view);
+        View view = navigationView.inflateHeaderView(R.layout.nav_header);
+        TextView textView=(TextView) view.findViewById(R.id.app_name);
+        textView.setText(R.string.app_name);
         navigationView.getMenu().findItem(R.id.add_update).setVisible(false);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

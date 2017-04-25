@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.abhiroj.goonj.R;
 import com.abhiroj.goonj.adapter.EventDetailListAdapter;
@@ -30,6 +31,8 @@ import static com.abhiroj.goonj.data.Constants.KEY_EVENT_LIST;
 import static com.abhiroj.goonj.data.Constants.fragtag;
 import static com.abhiroj.goonj.data.EventDataContract.category;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
+import static com.abhiroj.goonj.utils.Utility.detectConnection;
+import static com.abhiroj.goonj.utils.Utility.showSnackBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,6 +49,8 @@ public class EventDetailListFragment extends Fragment {
     private ValueEventListener dataAdd;
     private ArrayList<EventData> events;
     private String eventype;
+    private ProgressBar progressBar;
+    private GridLayoutManager layoutManager;
 
 
     @Override
@@ -72,7 +77,7 @@ public class EventDetailListFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int totalevents= (int) dataSnapshot.getChildrenCount();
                 Log.d(TAG,"Total Events:"+totalevents+" Data Snapshot details "+dataSnapshot.getKey());
-
+                progressBar.setVisibility(View.INVISIBLE);
                 for (DataSnapshot data:dataSnapshot.getChildren())
                 {
                     EventData eventData=data.getValue(EventData.class);
@@ -101,11 +106,26 @@ public class EventDetailListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView=inflater.inflate(R.layout.fragment_event_detail_list, container, false);
+        progressBar=(ProgressBar)rootView.findViewById(R.id.load_bar);
         eventdetailist=(RecyclerView) rootView.findViewById(R.id.event_detail_list);
         eventDetailListAdapter=new EventDetailListAdapter(getContext());
-        GridLayoutManager layoutManager=new GridLayoutManager(getContext(),1);
-        eventdetailist.setAdapter(eventDetailListAdapter);
-        eventdetailist.setLayoutManager(layoutManager);
+        layoutManager=new GridLayoutManager(getContext(),1);
+        if(detectConnection(getContext()))
+        {
+            if(events.size()==0 )
+            {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+            else
+                progressBar.setVisibility(View.INVISIBLE);
+            eventdetailist.setAdapter(eventDetailListAdapter);
+            eventdetailist.setLayoutManager(layoutManager);
+
+        }
+        else
+        {
+            showSnackBar(getActivity(),R.string.no_internet);
+        }
         return rootView;
     }
 

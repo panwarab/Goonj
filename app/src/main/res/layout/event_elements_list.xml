@@ -19,7 +19,7 @@
             android:textColor="@color/textFrontColor"
             android:background="@color/textViewBackground"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/event_card_image_height"/>
+            android:textSize="@dimen/text_height_150"/>
 
         <TextView
             android:id="@+id/event_card_text"

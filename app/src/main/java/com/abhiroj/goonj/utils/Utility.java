@@ -2,6 +2,8 @@ package com.abhiroj.goonj.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
@@ -53,5 +55,12 @@ public class Utility {
 
     public static void showToast(Context context, int no_call) {
         Toast.makeText(context,no_call,Toast.LENGTH_SHORT).show();
+    }
+
+    public static boolean detectConnection(Context context) {
+        if (context == null) return false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }

@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -24,11 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
-            tools:replace="android:value"
             android:name="io.fabric.ApiKey"
             android:value="011345062a36a1ac3727e9e59ddfefdf230917eb"
-            />
+            tools:replace="android:value" />
+
+        <activity android:name=".activity.ReleaseUpdate"
+            android:theme="@style/update_dialog"></activity>
     </application>
 
 </manifest>

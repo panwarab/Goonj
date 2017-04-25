@@ -68,7 +68,6 @@ public class MainFragment extends Fragment {
         toolbar.setTitle(R.string.app_name);
         // Inflate the layout for this fragment
         rootView=inflater.inflate(R.layout.fragment_main, container, false);
-        setupImageSlider();
         grid_view=(RecyclerView) rootView.findViewById(R.id.grid_view);
         grid_view.setHasFixedSize(true);
         grid_view.setLayoutManager(new GridLayoutManager(getContext(),SPAN_COUNT));
@@ -76,12 +75,6 @@ public class MainFragment extends Fragment {
         return rootView;
     }
 
-    private void setupImageSlider() {
-        imagepager=(ViewPager)rootView.findViewById(R.id.imageslider);
-        imagepager.setAdapter(new ImageAdapter(getChildFragmentManager()));
-        imagepager.setCurrentItem(0);
-        imagepager.setPageTransformer(true,new DepthPageTransformer());
-    }
 
     /**
      * WIll use later for automation purpose, requires improvement

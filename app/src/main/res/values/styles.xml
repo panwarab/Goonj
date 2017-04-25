@@ -23,4 +23,7 @@
         <item name="android:backgroundTint">@android:color/black</item>
     </style>
 
+    <style name="update_dialog" parent="@android:style/Theme.Material.Dialog">
+    </style>
+
 </resources>

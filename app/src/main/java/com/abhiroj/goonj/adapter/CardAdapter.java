@@ -1,6 +1,7 @@
 package com.abhiroj.goonj.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -47,7 +48,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardHolder> {
     @Override
     public void onBindViewHolder(CardHolder holder, final int position) {
         holder.card_title.setText(card_titles[position]);
-        Picasso.with(context).load(image_placeholder).resize(300,300).into(holder.card_image);
+        holder.card_image.setImageDrawable(getImage(position));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +56,21 @@ public class CardAdapter extends RecyclerView.Adapter<CardHolder> {
                 tappedListener.onCardTapped(card_titles[position]);
             }
         });
+    }
+
+    private Drawable getImage(int position) {
+    if(position==0)
+    {
+        return context.getDrawable(R.drawable.ic_event_available);
+    }
+    if(position==1){
+        return context.getDrawable(R.drawable.ic_update);
+    }
+    if(position==2)
+    {
+        return context.getDrawable(R.drawable.ic_group);
+    }
+    return context.getDrawable(R.mipmap.ic_launcher);
     }
 
     @Override

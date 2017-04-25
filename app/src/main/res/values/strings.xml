@@ -45,4 +45,19 @@
     <string name="no_call">Permit to make a call!</string>
     <string name="makingcall">Making call!</string>
     <string name="no_app">No such apps!</string>
+    <string name="update_type">Update Title</string>
+    <string name="update_message">Update Message</string>
+    <string name="rel_update">Release an update</string>
+    <string name="cancel">Cancel</string>
+    <string name="go">Go</string>
+    <string name="making_builder">Making Builder</string>
+    <string name="neccesary">This field is necessary!</string>
+    <string name="upd_no_rel">Update cancelled!</string>
+    <string name="login_require">Login Required!</string>
+    <string name="upd_released">Update Released!</string>
+    <string name="upd_not_released">Update Cancelled! Please try again!</string>
+    <string name="by">By :-</string>
+    <string name="no_internet">You are not connected!</string>
+    <string name="upd_tuned">Stay tuned for event updates!</string>
+    <string name="nav_message">GBPEC\'s Annual Cultural Fest</string>
 </resources>

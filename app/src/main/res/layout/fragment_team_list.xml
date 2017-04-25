@@ -6,4 +6,12 @@
             android:id="@+id/list_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <ProgressBar
+            android:id="@+id/load_bar"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:layout_margin="@dimen/card_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
 </FrameLayout>
