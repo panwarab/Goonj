@@ -89,13 +89,17 @@ public class EventDetailListFragment extends Fragment {
         databaseReference.addValueEventListener(dataAdd);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toolbar toolbar=(Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(eventype);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Toolbar toolbar=(Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(eventype);
         View rootView=inflater.inflate(R.layout.fragment_event_detail_list, container, false);
         eventdetailist=(RecyclerView) rootView.findViewById(R.id.event_detail_list);
         eventDetailListAdapter=new EventDetailListAdapter(getContext());

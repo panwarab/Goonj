@@ -39,4 +39,10 @@ public class Constants {
     public static final String USER_ROOT="Users";
     public static final String PREFS="Goonj_app";
 
+    //Team Variables
+    public static final String TEAM_ROOT="team";
+
+    //Request Code
+    public static final int CALL_REQUEST = 5;
+
 }

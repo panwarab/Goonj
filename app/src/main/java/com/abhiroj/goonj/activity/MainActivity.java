@@ -1,37 +1,31 @@
 package com.abhiroj.goonj.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.abhiroj.goonj.R;
-import com.abhiroj.goonj.data.Constants;
 import com.abhiroj.goonj.data.User;
 import com.abhiroj.goonj.fragment.EventDetailListFragment;
 import com.abhiroj.goonj.fragment.EventsFragment;
 import com.abhiroj.goonj.fragment.MainFragment;
+import com.abhiroj.goonj.fragment.TeamListFragment;
 import com.abhiroj.goonj.listener.OnCardTappedListener;
 import com.abhiroj.goonj.utils.Utility;
 import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.BuildConfig;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
@@ -45,13 +39,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.abhiroj.goonj.data.Constants.ADMINPATH;
 import static com.abhiroj.goonj.data.Constants.ARTS;
 import static com.abhiroj.goonj.data.Constants.DANCE;
 import static com.abhiroj.goonj.data.Constants.DRAMATICS;
@@ -61,14 +53,13 @@ import static com.abhiroj.goonj.data.Constants.LITERARY;
 import static com.abhiroj.goonj.data.Constants.MUSIC;
 import static com.abhiroj.goonj.data.Constants.OTHERS;
 import static com.abhiroj.goonj.data.Constants.PHOTOGRAPHY;
-import static com.abhiroj.goonj.data.Constants.PREFS;
 import static com.abhiroj.goonj.data.Constants.RESULT_FROM_ADD;
 import static com.abhiroj.goonj.data.Constants.USER_ROOT;
 import static com.abhiroj.goonj.data.Constants.auth_mail;
 import static com.abhiroj.goonj.data.Constants.fragtag;
 import static com.abhiroj.goonj.utils.Utility.checkNotNull;
 import static com.abhiroj.goonj.utils.Utility.showSnackBar;
-import static com.abhiroj.goonj.utils.Utility.showToast;
+
 
 
 public class MainActivity extends AppCompatActivity implements OnCardTappedListener {
@@ -89,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     private FirebaseUser user;
     private Activity activity;
     private DatabaseReference user_root;
+    private TeamListFragment teamListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +130,11 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             {
                 eventDetailListFragment=(EventDetailListFragment) fragment;
                 fragmentManager.beginTransaction().replace(R.id.fragment_container,eventDetailListFragment,EventDetailListFragment.TAG).commit();
+            }
+            else if(fragment instanceof TeamListFragment)
+            {
+                teamListFragment=(TeamListFragment) fragment;
+                fragmentManager.beginTransaction().replace(R.id.fragment_container,teamListFragment,TeamListFragment.TAG).commit();
             }
         }
         else {
@@ -217,16 +214,13 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
             case "Events":
                 EventsFragment eventsFragment = EventsFragment.newInstance();
                 fragmentManager.beginTransaction().replace(R.id.fragment_container, eventsFragment, EventsFragment.TAG).addToBackStack(EventsFragment.TAG).commit();
-
                 break;
             case "Latest Updates":
                 //TODO: Latest Updates Fragment
                 break;
             case "Team":
-                // TODO: Team Fragment
-                break;
-            case "Register":
-                // TODO: Register Fragment
+               TeamListFragment teamListFragment= TeamListFragment.newInstance();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, teamListFragment, TeamListFragment.TAG).addToBackStack(TeamListFragment.TAG).commit();
                 break;
             case "Dramatics":
                 attachEventDetailListFragment(DRAMATICS);

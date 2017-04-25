@@ -42,11 +42,16 @@ public class EventsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Toolbar toolbar=(Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Events");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Toolbar toolbar=(Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Events");
         // Inflate the layout for this fragment
         View rootView=inflater.inflate(R.layout.fragment_events, container,false);
         RecyclerView recyclerView=(RecyclerView) rootView.findViewById(R.id.card_list);

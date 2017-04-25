@@ -1,6 +1,7 @@
 package com.abhiroj.goonj.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
@@ -50,4 +51,7 @@ public class Utility {
         Toast.makeText(activity,message,Toast.LENGTH_SHORT).show();
     }
 
+    public static void showToast(Context context, int no_call) {
+        Toast.makeText(context,no_call,Toast.LENGTH_SHORT).show();
+    }
 }

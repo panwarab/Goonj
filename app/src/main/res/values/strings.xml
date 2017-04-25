@@ -42,4 +42,7 @@
     <string name="server_record_fail">Try again to request Admin access!</string>
     <string name="crit">Criteria :-</string>
     <string name="points">Points :-</string>
+    <string name="no_call">Permit to make a call!</string>
+    <string name="makingcall">Making call!</string>
+    <string name="no_app">No such apps!</string>
 </resources>

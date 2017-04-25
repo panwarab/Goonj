@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+     android:layout_width="match_parent"
+    android:layout_margin="@dimen/card_margin">
+
+<FrameLayout
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:background="@color/textViewBackground"
+    android:padding="@dimen/list_item_margin">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mem_name"
+            android:layout_width="0dp"
+            android:text="D"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.1"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:id="@+id/mem_comm"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:letterSpacing="0.1"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Defayulterfjdf"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/card_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/phone"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_call"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content" />
+
+
+        <ImageView
+            android:id="@+id/message"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_message"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</LinearLayout>
+</FrameLayout>
+</android.support.v7.widget.CardView>
