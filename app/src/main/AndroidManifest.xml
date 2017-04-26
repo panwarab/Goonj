@@ -29,8 +29,18 @@
             android:value="011345062a36a1ac3727e9e59ddfefdf230917eb"
             tools:replace="android:value" />
 
-        <activity android:name=".activity.ReleaseUpdate"
-            android:theme="@style/update_dialog"></activity>
+        <activity
+            android:name=".activity.ReleaseUpdate"
+            android:theme="@style/update_dialog" />
+        <activity
+            android:name=".activity.FeedbackActivity"
+            android:label="@string/title_activity_feedback"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.abhiroj.goonj.activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

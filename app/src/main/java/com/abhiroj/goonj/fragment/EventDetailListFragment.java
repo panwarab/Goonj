@@ -75,8 +75,6 @@ public class EventDetailListFragment extends Fragment {
         dataAdd=new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int totalevents= (int) dataSnapshot.getChildrenCount();
-                Log.d(TAG,"Total Events:"+totalevents+" Data Snapshot details "+dataSnapshot.getKey());
                 progressBar.setVisibility(View.INVISIBLE);
                 for (DataSnapshot data:dataSnapshot.getChildren())
                 {

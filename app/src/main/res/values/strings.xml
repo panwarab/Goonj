@@ -56,8 +56,9 @@
     <string name="login_require">Login Required!</string>
     <string name="upd_released">Update Released!</string>
     <string name="upd_not_released">Update Cancelled! Please try again!</string>
-    <string name="by">By :-</string>
+    <string name="by">By :- </string>
     <string name="no_internet">You are not connected!</string>
     <string name="upd_tuned">Stay tuned for event updates!</string>
-    <string name="nav_message">GBPEC\'s Annual Cultural Fest</string>
+    <string name="nav_message">Goonj\' 17</string>
+    <string name="title_activity_feedback">Share Feedback</string>
 </resources>

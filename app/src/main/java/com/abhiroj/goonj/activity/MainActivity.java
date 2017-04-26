@@ -3,6 +3,9 @@ package com.abhiroj.goonj.activity;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +54,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -100,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     private TeamListFragment teamListFragment;
     private AlertDialog updateDialog;
     private UpdateFragment updateFragment;
+    private View navview;
+    private TextView userlogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +115,10 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
         activity=MainActivity.this;
         Fabric.with(this, new Crashlytics());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_dehaze);
+        Drawable drawable=getDrawable(R.drawable.ic_dehaze);
+        drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+        toolbar.setNavigationIcon(drawable);
+        toolbar.setTitleTextColor(Color.BLACK);
         setSupportActionBar(toolbar);
         setupNavigationView();
         firebaseDatabase=FirebaseDatabase.getInstance();
@@ -168,7 +178,9 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     }
 
     private void userStatus(final FirebaseUser  user) {
-      databaseReference.child(USER_ROOT).child(user.getUid()).addValueEventListener(new ValueEventListener() {
+        userlogin.setText("Hi! "+user.getDisplayName());
+        userlogin.setVisibility(View.VISIBLE);
+        databaseReference.child(USER_ROOT).child(user.getUid()).addValueEventListener(new ValueEventListener() {
           @Override
           public void onDataChange(DataSnapshot dataSnapshot) {
                if(dataSnapshot.exists())
@@ -299,6 +311,8 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
         case R.id.add_update:
             startActivityForResult(new Intent(MainActivity.this,ReleaseUpdate.class),RQ_UPDATE);
             break;
+        case R.id.send:
+            startActivity(new Intent(MainActivity.this,FeedbackActivity.class));
     }
     drawerLayout.closeDrawers();
     }
@@ -323,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         public void onComplete(@NonNull Task<Void> task) {
                             // user is now signed out
+                            userlogin.setVisibility(View.INVISIBLE);
                             showSnackBar(activity,R.string.signout_success);
                             navigationView.getMenu().findItem(R.id.add_update).setVisible(false);
                         }
@@ -348,9 +363,6 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
       switch(requestCode) {
           case RC_SIGN_IN:
               IdpResponse idpResponse=IdpResponse.fromResultIntent(data);
-              if(idpResponse!=null) {
-                  Log.d(TAG, idpResponse.getErrorCode() + "");
-              }
           if (resultCode == ResultCodes.OK) {
               // Sign-In Successful
               showSnackBar(activity, R.string.signing_in);
@@ -437,9 +449,10 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
     {
         drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView) findViewById(R.id.nav_view);
-        View view = navigationView.inflateHeaderView(R.layout.nav_header);
-        TextView textView=(TextView) view.findViewById(R.id.app_name);
-        textView.setText(R.string.app_name);
+        navview = navigationView.inflateHeaderView(R.layout.nav_header);
+        ImageView imageView=(ImageView) navview.findViewById(R.id.goonj_logo);
+        Picasso.with(MainActivity.this).load(R.drawable.goonj_logo).resize(256,256).centerInside().into(imageView);
+        userlogin= (TextView) navview.findViewById(R.id.log_welcome);
         navigationView.getMenu().findItem(R.id.add_update).setVisible(false);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -450,4 +463,14 @@ public class MainActivity extends AppCompatActivity implements OnCardTappedListe
         });
     }
 
+    @Override
+    public void onBackPressed() {
+       int count=fragmentManager.getBackStackEntryCount();
+        if(count<=1)
+        {
+            finish();
+        }
+        super.onBackPressed();
+
+    }
 }

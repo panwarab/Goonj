@@ -32,30 +32,40 @@ public class Utility {
 
 
     public static void showSnackBar(final Activity activity, int message){
-        View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
-        Snackbar snackbar=Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
-        snackbar.show();
+        if(activity!=null) {
+            View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+            Snackbar snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
     }
 
     public static void showSnackBar(final Activity activity,String message){
-        View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
-        Snackbar snackbar=Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
-        snackbar.show();
+        if(activity!=null) {
+            View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+            Snackbar snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
     }
 
     public static void showToast(Activity activity,int resId)
     {
-        Toast.makeText(activity,resId,Toast.LENGTH_SHORT).show();
-    }
+        if(activity!=null) {
+            Toast.makeText(activity, resId, Toast.LENGTH_SHORT).show();
+        }
+        }
 
     public static void showToast(Activity activity,String message)
     {
-        Toast.makeText(activity,message,Toast.LENGTH_SHORT).show();
-    }
+        if(activity!=null) {
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+        }
+        }
 
     public static void showToast(Context context, int no_call) {
-        Toast.makeText(context,no_call,Toast.LENGTH_SHORT).show();
-    }
+        if(context!=null) {
+            Toast.makeText(context, no_call, Toast.LENGTH_SHORT).show();
+        }
+        }
 
     public static boolean detectConnection(Context context) {
         if (context == null) return false;

@@ -91,7 +91,7 @@ public class UpdateFragment extends Fragment {
         listAdapter=new UpdateListAdapter(getContext());
         progressBar=(ProgressBar) view.findViewById(R.id.load_bar);
         if( Utility.detectConnection(getContext())) {
-            if(updateDatas.size()!=0)
+            if(updateDatas!=null && updateDatas.size()>0)
             {
                 progressBar.setVisibility(View.INVISIBLE);
             }

@@ -12,5 +12,10 @@
             android:id="@+id/add_update"
             android:icon="@drawable/ic_add"
             android:title="@string/add_update" />
+    <item
+        android:id="@+id/send"
+        android:icon="@drawable/ic_send"
+        android:title="Share Feedback!"
+        />
 
 </menu>

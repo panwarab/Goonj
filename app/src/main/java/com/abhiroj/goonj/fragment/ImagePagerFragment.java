@@ -30,7 +30,6 @@ public class ImagePagerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG,"Creating View");
         View rootView = inflater.inflate(R.layout.fragment_imagepager, container, false);
         image_item = (ImageView) rootView.findViewById(R.id.display_image);
         Picasso picasso=Picasso.with(getContext());

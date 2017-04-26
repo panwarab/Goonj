@@ -19,12 +19,10 @@ public class ImageAdapter extends FragmentPagerAdapter{
 
     public ImageAdapter(FragmentManager fm) {
         super(fm);
-        Log.d(TAG,"Adapter init");
     }
 
     @Override
     public Fragment getItem(int position) {
-        Log.d(TAG,"Fetching item "+position);
         return ImagePagerFragment.newInstance(position);
     }
 

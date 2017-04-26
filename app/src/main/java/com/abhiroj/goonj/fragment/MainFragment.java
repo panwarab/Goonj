@@ -48,7 +48,6 @@ public class MainFragment extends Fragment {
     Runnable automatic_sliding=new Runnable() {
         @Override
         public void run() {
-            Log.d(TAG,"Runnable Called");
             imagepager.setCurrentItem((currentImage%IMAGE_COUNT)<4?currentImage++:setCurrentImage(0),true);
             slide_handler.postDelayed(automatic_sliding,HANDLER_POST_DELAYED_TIME);
         }
@@ -102,8 +101,7 @@ public class MainFragment extends Fragment {
      * @return
      */
     public int setCurrentImage(int currentImage) {
-        Log.d(TAG,"Position Updated :"+currentImage);
-         this.currentImage = currentImage;
+        this.currentImage = currentImage;
     return currentImage;
     }
 

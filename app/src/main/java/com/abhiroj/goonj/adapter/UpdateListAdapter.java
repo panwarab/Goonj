@@ -51,11 +51,9 @@ public class UpdateListAdapter extends RecyclerView.Adapter<UpdateListItemHolder
     public void addNewData(ArrayList<UpdateData> updateDatas) {
     if(internal_list==null)
         internal_list=new ArrayList<>();
-        if(internal_list.size()<updateDatas.size())
-    {
         internal_list.clear();
         internal_list.addAll(updateDatas);
         Collections.reverse(internal_list);
-    }
+        notifyDataSetChanged();
     }
 }

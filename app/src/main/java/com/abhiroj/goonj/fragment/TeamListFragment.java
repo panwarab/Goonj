@@ -58,7 +58,6 @@ public class TeamListFragment extends Fragment {
                 if(progressBar!=null)
                 progressBar.setVisibility(View.INVISIBLE);
                 int total = (int) dataSnapshot.getChildrenCount();
-                Log.d(TAG, "Total Team types " + total);
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     for (DataSnapshot d1 : d.getChildren()) {
                         TeamMember member = new TeamMember();

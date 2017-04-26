@@ -14,16 +14,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:titleTextColor">@android:color/black</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
-    <item name="android:titleTextColor">@android:color/black</item>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:titleTextColor">@android:color/black</item>
         <item name="android:backgroundTint">@android:color/black</item>
     </style>
 
-    <style name="update_dialog" parent="@android:style/Theme.Material.Dialog">
-    </style>
+    <style name="update_dialog" parent="@android:style/Theme.Material.Dialog"></style>
 
 </resources>
